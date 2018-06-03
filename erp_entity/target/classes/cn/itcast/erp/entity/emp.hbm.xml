@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="cn.itcast.erp.entity.Emp" table="emp" >
+        <id name="uuid" >
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator"> <param name="sequence_name">emp_seq</param> </generator>
+        </id>
+
+        <property name="username" /> 
+        <!-- 通过持久对象管理的操作（set属性值，update(entity)），不更新这个字段-->
+        <property name="pwd" update="false"/> 
+        <property name="name" /> 
+        <property name="gender" /> 
+        <property name="email" /> 
+        <property name="tele" /> 
+        <property name="address" /> 
+        <property name="birthday" /> 
+        <!-- <property name="depuuid" />  -->
+        
+        <many-to-one name="dep" class="cn.itcast.erp.entity.Dep" column="DEPUUID"></many-to-one>
+ 
+ 		<!-- 用户下的角色 多对多 -->
+ 		<bag name="roles" table="emp_role" order-by="roleuuid">
+ 			<key column="empuuid"></key>
+ 			<many-to-many class="cn.itcast.erp.entity.Role" column="roleuuid"></many-to-many>
+ 		</bag>
+    </class>
+</hibernate-mapping>

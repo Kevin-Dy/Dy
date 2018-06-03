@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>盘盈盘亏管理</title>
+<link rel="stylesheet" type="text/css" href="ui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="ui/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="css/table.css">
+<script type="text/javascript" src="ui/jquery.min.js"></script>
+<script type="text/javascript" src="ui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="ui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="ui/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="js/inventory_doCheck.js"></script>
+<script type="text/javascript" src="ui/date.js"></script>
+</head>
+<body>
+<div class="easyui-panel" style="padding-left:4px;border-bottom:0px;">
+	<div style="height:2px;"></div>
+	<form id="searchForm">
+			登记日期：<input name="t1.createtime" class="easyui-datebox" >-<input name="t2.createtime" class="easyui-datebox" >
+			审核日期：<input name="t1.checktime" class="easyui-datebox" >-<input name="t2.checktime" class="easyui-datebox" >	
+		  	类型:<input name="t1.type" type="radio" value="">全部
+		  	<input name="t1.type" type="radio" value="1">盘盈
+		  	<input name="t1.type" type="radio" value="2">盘亏
+		<button type="button" id="btnSearch">查询</button>
+	</form>
+	<div style="height:2px;"></div>
+</div>
+<table id="grid"></table>
+<div id="inventoryDetailDlg" style="padding:2px">
+		<table class="hovertable">
+			<tr>
+				<td class="bg" width="30%">编号</td>
+				<td id="uuid"></td>
+			</tr>
+			<tr>
+				<td class="bg" width="30%">登记日期</td>
+				<td id="createtime"></td>
+			</tr>
+			<tr>
+				<td class="bg" width="30%">商品</td>
+				<td id="goodsname"></td>
+			</tr>
+			<tr>
+				<td class="bg" width="30%">仓库</td>
+				<td id="storename"></td>
+			</tr>
+			<tr>
+				<td class="bg" width="30%">数量</td>
+				<td id="num"></td>
+			</tr>
+			<tr>
+				<td class="bg" width="30%">类型</td>
+				<td id="type"></td>
+			</tr>
+			<tr>
+				<td class="bg" width="30%">备注</td>
+				<td id="remark"></td>
+			</tr>
+		</table>
+</div>
+</body>
+</html>

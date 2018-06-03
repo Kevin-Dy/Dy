@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>采购订单退货申请</title>
+<link rel="stylesheet" type="text/css" href="ui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="ui/themes/icon.css">
+<script type="text/javascript" src="ui/jquery.min.js"></script>
+<script type="text/javascript" src="ui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="ui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="ui/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="ui/date.js"></script>
+<script type="text/javascript" src="js/returnorders_add.js"></script>
+<script type="text/javascript">
+	
+
+</script>
+</head>
+<body>
+<form id="returnordersForm">
+		供应商:<input id="supplier" name="t.supplieruuid">
+</form>
+<div style="height:2px"></div>
+<div id="addReturnordersgrid" ></div>
+<!-- 订单窗口 -->
+<div id="ordersDlg">
+	<div id="ordersgrid"></div>
+</div>
+<!-- 订单明细窗口 -->
+<div id="ordersdetailDlg">
+	<div id="ordersdetailgrid"></div>
+</div>
+</body>
+</html>

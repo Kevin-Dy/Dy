@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>盘盈盘亏登记</title>
+<link rel="stylesheet" type="text/css" href="ui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="ui/themes/icon.css">
+<script type="text/javascript" src="ui/jquery.min.js"></script>
+<script type="text/javascript" src="ui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="ui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="ui/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="ui/date.js"></script>
+<script type="text/javascript">
+var name="inventory";
+var method = "";
+var height = 220;
+var listParam = "";
+var saveParam = "";
+$(function(){
+	$('#grid').datagrid({
+		url:name + '_listByPage.action' + listParam,
+		columns:[[
+		  		    {field:'uuid',title:'编号',width:100},
+		  		    {field:'goodsName',title:'商品',width:100},
+		  		    {field:'storeName',title:'仓库',width:100},
+		  		    {field:'num',title:'数量',width:100},
+		  		    {field:'type',title:'类型',width:100,formatter:function(value){
+		  		    	if(value * 1 == 1 ){
+		  		    		return '盘盈';
+		  		    	}
+		  		    	if(value * 1 == 2 ){
+		  		    		return '盘亏';
+		  		    	}
+		  		    	return '';
+		  		    }},
+		  		    {field:'createtime',title:'登记日期',width:150,formatter:formatDate},
+		  		    {field:'checktime',title:'审核日期',width:150,formatter:formatDate},
+		  		    {field:'createrName',title:'登记人',width:100},
+		  		    {field:'checkerName',title:'审核人',width:100},
+		  		    {field:'state',title:'状态',width:100,formatter:function(value){
+		  		    	if(value * 1 == 0){
+		  		    		return '未审核';
+		  		    	}
+		  		    	if(value * 1 == 1){
+		  		    		return '已审核';
+		  		    	}
+		  		    	return '';
+		  		    }},
+					]],
+		singleSelect: true,
+		pagination: true,
+		toolbar: [{
+			text: '盘盈盘亏登记',
+			iconCls: 'icon-add',
+			handler: function(){
+				//设置保存按钮提交的方法为add
+				method = "add";
+				//关闭编辑窗口
+				$('#editForm').form('clear');
+				$('#editDlg').dialog('open');
+			}
+		}]
+	})
+
+//点击查询按钮
+	$('#btnSearch').bind('click',function(){
+		//把表单数据转换成json对象
+		var formData = $('#searchForm').serializeJSON();
+		$('#grid').datagrid('load',formData);
+	});
+
+	//初始化编辑窗口
+	$('#editDlg').dialog({
+		title: '编辑',//窗口标题
+		width: 300,//窗口宽度
+		height: height,//窗口高度
+		closed: true,//窗口是是否为关闭状态, true：表示关闭
+		modal: true,//模式窗口
+		buttons:[{
+			text:'保存',
+			iconCls: 'icon-save',
+			handler:function(){
+				// 表单验证，确保所有的输入框都有效
+				if(!$('#editForm').form('validate')){
+					return;
+				}
+				
+				//用记输入的部门信息
+				var submitData= $('#editForm').serializeJSON();
+				$.ajax({
+					url: name + '_' + method + '.action' + saveParam,
+					data: submitData,
+					dataType: 'json',
+					type: 'post',
+					success:function(rtn){
+						//{success:true, message: 操作失败}
+						$.messager.alert('提示',rtn.message, 'info',function(){
+							if(rtn.success){
+								//关闭弹出的窗口
+								$('#editDlg').dialog('close');
+								//刷新表格
+								$('#grid').datagrid('reload');
+							}
+						});
+					}
+				});
+			}
+		},{
+			text:'关闭',
+			iconCls:'icon-cancel',
+			handler:function(){
+				//关闭弹出的窗口
+				$('#editDlg').dialog('close');
+			}
+		}]
+	});
+})
+//日期格式化
+function formatDate(value){
+	if(value){ // value有值，不为null, 不为undefined
+		return new Date(value).Format("yyyy-MM-dd");
+	}
+}
+</script>
+</head>
+<body>
+<div class="easyui-panel" style="padding-left:4px;border-bottom:0px;">
+	<div style="height:2px;"></div>
+	<form id="searchForm">
+	登记日期：<input name="t1.createtime" class="easyui-datebox"> -> <input name="t2.createtime" class="easyui-datebox">
+	审核日期：<input name="t1.checktime" class="easyui-datebox"> -> <input name="t2.checktime" class="easyui-datebox">
+	类型:	<input name="t1.type" type="radio" value="">全部
+			<input name="t1.type" type="radio" value="1">盘盈
+			<input name="t1.type" type="radio" value="2">盘亏
+
+		<button type="button" id="btnSearch">查询</button>
+	</form>
+	<div style="height:2px;"></div>
+</div>
+<table id="grid"></table>
+
+<div id="editDlg" style="padding:8px;">
+	<form id="editForm">
+			<input name="t.uuid" type="hidden"> 
+
+		<table>
+			<tr>
+				<td>商品</td><td><input name="t.goodsuuid" class="easyui-combobox"
+				data-options="required:true,valueField:'uuid',textField:'name',url:'goods_list.action'"> </td>
+			</tr>
+			<tr>
+				<td>仓库</td><td><input name="t.storeuuid" class="easyui-combobox"
+				data-options="required:true,valueField:'uuid',textField:'name',url:'store_list.action'"> </td>
+			</tr>
+			<tr>
+				<td>数量</td><td><input name="t.num" class="easyui-numberbox" min="0" value="0" max="100000000"> </td>
+			</tr>
+			<tr>
+				<td>类型</td><td><input name="t.type" type="radio" value="1">盘盈 <input name="t.type" type="radio" value="2">盘亏 </td>
+			</tr>
+			<tr>
+				<td>备注</td><td><input name="t.remark"> </td>
+			</tr>
+
+		</table>
+	</form>
+</div>
+
+</body>
+</html>
